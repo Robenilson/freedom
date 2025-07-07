@@ -3,6 +3,8 @@ import { CreateUserWithProfile } from "../types/user";
 
 async function signIn(emailClient: string, password: string) {
   try {
+    console.log(emailClient, password );
+
     const url = " http://192.168.100.19:3000/auth/auth";
 
     if (!url) {
@@ -29,49 +31,22 @@ async function signIn(emailClient: string, password: string) {
   }
 }
 
-async function createUser(
-  email: string,
-  password: string,
-  name: string,
-  tel: string,
-  cpf: string,
-  age: number,
-  
-) {
+
+export const createUser = async (email, password, name, tel, cpf, age) => {
   try {
-
-    
-    const url = "http://192.168.100.19:3000/auth/register";
-
-    if (!url) {
-      throw new Error("Url nao definida");
-    }
-
-    console.log({
+    const response = await axios.post("http://192.168.100.19:3000/auth/register", {
       email,
       password,
       name,
       tel,
       cpf,
-      age,
-    } );
-
-    const response: CreateUserWithProfile = await axios.post(url, {
-      email,
-      password,
-      name,
-      tel,
-      cpf,
-      age,
+      age
     });
 
-    console.log("response axios", response);
-
-    return response;
+    return response.data; // ou response, se precisar de mais dados
   } catch (error) {
-    console.error("erro interno no servidor");
+    console.error("Erro ao criar usuário:", error.response?.data || error.message);
     throw error;
   }
-}
-
+};
 export const authService = { signIn, createUser };

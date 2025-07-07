@@ -1,38 +1,39 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
+import { FastifyRequest, FastifyReply } from 'fastify'
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import env from 'dotenv'
+import dotenv from 'dotenv'
 
-env.config()
+dotenv.config()
 
 export default async function authMiddleware(
   req: FastifyRequest,
   reply: FastifyReply
 ): Promise<void> {
-  const jwt_secret = process.env.JWT_SECRET
+  const jwtSecret = process.env.JWT_SECRET
 
-  if (!jwt_secret)
-    return reply.send('JWT_SECRET não está definido nas variáveis de ambiente')
+  if (!jwtSecret) {
+    reply.status(500).send('JWT_SECRET não está definido nas variáveis de ambiente')
+    return
+  }
 
   try {
-    const auth = req.headers.authorization
+    const authHeader = req.headers.authorization
 
-    if (!auth) {
-      return reply.status(401).send('Você não tem permissão para essa ação')
+    if (!authHeader) {
+      reply.status(401).send('Acesso não autorizado')
+      return
     }
 
-    const token = auth.split(' ')[1]
+    const token = authHeader.split(' ')[1]
 
     if (!token) {
-      return reply.status(401).send('Token não fornecido')
+      reply.status(401).send('Token não fornecido')
+      return
     }
 
-    jwt.verify(token, jwt_secret, (err, decoded) => {
-      if (err) {
-        reply.status(401).send('Token invalido ou expirado')
-      }
-      req.email = (decoded as JwtPayload).email
-    })
+    const decoded = jwt.verify(token, jwtSecret) as JwtPayload
+
+    req.email = decoded.email
   } catch (err) {
-    reply.status(500).send('Erro interno do servidor')
+    reply.status(401).send('Token inválido ou expirado')
   }
 }
