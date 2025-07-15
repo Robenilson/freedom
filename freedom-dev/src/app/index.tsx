@@ -59,28 +59,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    height: "100%",
-    width: "100%",
     flex: 1,
+    width: "100%",
+    height: "100%",
   },
   imageBackground: {
-    backgroundColor: Colors.secondaryPink,
     flex: 1,
-    resizeMode: "contain",
+    backgroundColor: Colors.secondaryPink,
+    resizeMode: "cover",
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.1)", // Alterar a cor e opacidade conforme necessário
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   contentInitial: {
-    width: "100%",
-    flex: 1,
     alignItems: "center",
-    justifyContent: "flex-end",
-    marginBottom: 50,
+    justifyContent: "center",
+    gap: 20, // ajuda com espaçamento entre elementos se seu projeto suportar
   },
   titleInitial: {
-    width: "auto",
     fontSize: 40,
     fontWeight: "700",
     textAlign: "center",
@@ -94,7 +93,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 100,
     paddingVertical: 15,
-    marginTop: 10,
   },
   textButton: {
     fontSize: 17,

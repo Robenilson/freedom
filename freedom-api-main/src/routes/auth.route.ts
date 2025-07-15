@@ -16,7 +16,6 @@ interface AuthMeProps {
   id: string
 }
 
-//to-do: implementar validação de dados enviados para cadastro de novo usuario com o ZOD
 
 export async function auth(fastify: FastifyInstance) {
   const userUseCase = new UserUseCase()

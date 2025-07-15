@@ -19,4 +19,11 @@ export const textStyle = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
   },
+
+  error: {
+    color: "#FF3B30", 
+    fontSize: 13,
+    marginTop: -5,
+    marginBottom: 5,
+  },
 });

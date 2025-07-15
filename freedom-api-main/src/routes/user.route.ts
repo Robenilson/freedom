@@ -5,24 +5,34 @@ import { CreateUserDto, updateUserDto } from '../interfaces/user.interface'
 
 export async function userRoute(fastify: FastifyInstance) {
   const userUseCase = new UserUseCase()
+fastify.post<{ Body: CreateUserDto }>('/', async (req, reply) => {
+  try {
+    const { email, password, ...rest } = req.body;
 
-  //??  Criar  id  no lado do cliente??
-  fastify.post<{ Body: CreateUserDto }>('/', async (req, reply) => {
-    try {
+    const data = await userUseCase.create({
+      email,
+      password: await generateHash(password),
+      ...rest,
+    });
+
+  
      
-      const { email, password, ...rest } = req.body
 
-      const data = await userUseCase.create({
-        email,
-        password: await generateHash(password),
-        ...rest,
-      })
+    return reply.code(201).send(data); // Created
+  } catch (error) {
+    console.error(error);
 
-      return reply.send(data)
-    } catch (error) {
-      reply.send(error)
+    if (error.code === 'USER_EXISTS') {
+      return reply.status(409).send({ message: 'Email ou CPF já cadastrado' });
     }
-  })
+
+    return reply.status(400).send({
+      message: 'Erro na requisição',
+      error: error.message || String(error),
+    });
+  }
+});
+
 
 
   //??
